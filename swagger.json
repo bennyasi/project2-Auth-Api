@@ -1,0 +1,286 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Project 2 Authentication & Order API",
+    "version": "1.0.0",
+    "description": "OAuth Google authentication, session-based auth, CRUD for Items & Orders, MongoDB integration, and Swagger documentation."
+  },
+  "servers": [
+    { "url": "http://localhost:5000" },
+    { "url": "https://yourapp.onrender.com" }
+  ],
+
+  "tags": [
+    { "name": "Auth", "description": "Google OAuth authentication" },
+    { "name": "Items", "description": "CRUD for items" },
+    { "name": "Orders", "description": "CRUD for orders" }
+  ],
+
+  "paths": {
+
+    "/api/hello": {
+      "get": {
+        "summary": "Test endpoint",
+        "tags": ["Auth"],
+        "responses": {
+          "200": { "description": "Hello world test" }
+        }
+      }
+    },
+
+    "/auth/google": {
+      "get": {
+        "summary": "Redirect user to Google for authentication",
+        "tags": ["Auth"],
+        "responses": {
+          "302": {
+            "description": "Redirects to Google OAuth"
+          }
+        }
+      }
+    },
+
+    "/auth/google/callback": {
+      "get": {
+        "summary": "Google OAuth callback",
+        "tags": ["Auth"],
+        "responses": {
+          "200": { "description": "Successful authentication" },
+          "401": { "description": "Unauthorized" }
+        }
+      }
+    },
+
+    "/auth/logout": {
+      "post": {
+        "summary": "Logs out the current user",
+        "tags": ["Auth"],
+        "responses": {
+          "200": { "description": "Logged out" }
+        }
+      }
+    },
+
+    "/items": {
+      "get": {
+        "summary": "Get all items",
+        "tags": ["Items"],
+        "responses": {
+          "200": {
+            "description": "List of items",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/Item" }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Create a new item",
+        "tags": ["Items"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/ItemInput" }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Item created" }
+        }
+      }
+    },
+
+    "/items/{id}": {
+      "get": {
+        "summary": "Get item by ID",
+        "tags": ["Items"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": { "description": "Item found" },
+          "404": { "description": "Item not found" }
+        }
+      },
+      "put": {
+        "summary": "Update an item",
+        "tags": ["Items"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/ItemInput" }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Item updated" }
+        }
+      },
+      "delete": {
+        "summary": "Delete an item",
+        "tags": ["Items"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": { "description": "Item deleted" }
+        }
+      }
+    },
+
+    "/orders": {
+      "get": {
+        "summary": "Get all orders",
+        "tags": ["Orders"],
+        "responses": {
+          "200": {
+            "description": "List of orders",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/Order" }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Create an order",
+        "tags": ["Orders"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/OrderInput" }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Order created" }
+        }
+      }
+    },
+
+    "/orders/{id}": {
+      "get": {
+        "summary": "Get order by ID",
+        "tags": ["Orders"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": { "description": "Order found" },
+          "404": { "description": "Order not found" }
+        }
+      },
+      "put": {
+        "summary": "Update order",
+        "tags": ["Orders"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/OrderInput" }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Order updated" }
+        }
+      },
+      "delete": {
+        "summary": "Delete order",
+        "tags": ["Orders"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": { "description": "Order deleted" }
+        }
+      }
+    }
+  },
+
+  "components": {
+    "schemas": {
+      "Item": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string" },
+          "name": { "type": "string" },
+          "price": { "type": "number" }
+        }
+      },
+      "ItemInput": {
+        "type": "object",
+        "required": ["name", "price"],
+        "properties": {
+          "name": { "type": "string", "example": "Laptop" },
+          "price": { "type": "number", "example": 999.99 }
+        }
+      },
+
+      "Order": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string" },
+          "customerName": { "type": "string" },
+          "itemId": { "type": "string" },
+          "quantity": { "type": "number" }
+        }
+      },
+      "OrderInput": {
+        "type": "object",
+        "required": ["customerName", "itemId", "quantity"],
+        "properties": {
+          "customerName": { "type": "string" },
+          "itemId": { "type": "string" },
+          "quantity": { "type": "number" }
+        }
+      }
+    }
+  }
+}
